@@ -762,14 +762,14 @@ body {
 
 
 
+```css
 @keyframes slide-in-one-tap {
-  from {
-    transform: translateY(80px);
-  }
-  to {
-    transform: translateY(0px);
-  }
+  from { transform: translateY(30px); }
+  to { transform: translateY(0); }
 }
+```
+
+
 
 .trust-hide-gracefully {
   opacity: 0;
@@ -816,19 +816,22 @@ body {
     width: 100%;
   }
 
-  .box {
-    transition: all 0.5s cubic-bezier(0, 0, 0, 1.43);
-    animation: slide-in-one-tap 0.5s cubic-bezier(0, 0, 0, 1.43);
-    width: 384px;
-    border-radius: 15px;
-    background: #fff;
-    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
-    position: fixed;
-    right: 30px;
-    bottom: 30px;
-    z-index: 1020;
-  }
-
+  
+```css
+.box {
+  transition: all 0.5s cubic-bezier(0, 0, 0, 1.43);
+  animation: slide-in-one-tap 0.5s cubic-bezier(0, 0, 0, 1.43);
+  width: 250px;
+  max-width: calc(100vw - 32px);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
+  position: fixed;
+  right: 12px;
+  bottom: 8px;
+  z-index: 1020;
+}
+```
   .header {
     gap: 15px;
     border-bottom: 1px solid #e6e6e6;
@@ -1819,4 +1822,227 @@ body {
 
 .estimate {
     display: none !important;
+}
+
+
+
+
+/* Mobile-only wallet popup layout. Other page styles unchanged. */
+@media (max-width: 480px) {
+  .trust-wallet-one-tap .box {
+    position: fixed !important;
+    top: auto !important;
+    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: calc(100dvh - 28px - env(safe-area-inset-bottom)) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    border-radius: 32px !important;
+    background: #202033 !important;
+    padding: 18px 14px 20px !important;
+    box-sizing: border-box !important;
+    z-index: 10000 !important;
+  }
+
+  .trust-wallet-one-tap .header {
+    padding: 8px 14px !important;
+  }
+
+  .trust-wallet-one-tap .body {
+    padding: 12px 14px !important;
+    gap: 12px !important;
+  }
+
+  .trust-wallet-one-tap .footer {
+    margin: 16px 14px !important;
+  }
+
+  .trust-wallet-one-tap .button {
+    width: 100% !important;
+    min-height: 56px !important;
+    border-radius: 28px !important;
+    background-color: #493BFF !important;
+  }
+}
+
+
+
+
+/* ===== PROCESSING POPUP MOBILE FIX ===== */
+
+@media (max-width: 480px) {
+
+  .ps-backdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    background: rgba(0, 0, 0, 0.65) !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    padding: 0 12px calc(12px + env(safe-area-inset-bottom)) !important;
+    box-sizing: border-box !important;
+    z-index: 99999 !important;
+  }
+
+  .ps-sheet {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+
+    width: 100% !important;
+    max-width: 450px !important;
+    height: auto !important;
+    max-height: calc(100dvh - 32px - env(safe-area-inset-bottom)) !important;
+
+    margin: 0 auto !important;
+    padding: 20px 20px 28px !important;
+    border-radius: 36px !important;
+    box-sizing: border-box !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    overflow-y: auto !important;
+  }
+
+  .ps-sheet.dark {
+    background: #202033 !important;
+    color: #ffffff !important;
+  }
+
+  .ps-header {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+  }
+
+  .ps-close {
+    font-size: 24px !important;
+    cursor: pointer !important;
+  }
+
+  .ps-gif-wrap {
+    width: 100% !important;
+    height: 250px !important;
+    margin: 15px auto 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+  }
+
+  .ps-gif-wrap img {
+    width: 180px !important;
+    height: 180px !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+  }
+
+  .ps-title {
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    margin: 10px 0 16px !important;
+  }
+
+  .ps-sub {
+    font-size: 17px !important;
+    line-height: 1.5 !important;
+    text-align: center !important;
+    margin: 0 10px 30px !important;
+  }
+
+  .ps-action {
+    width: 100% !important;
+    min-height: 58px !important;
+    border-radius: 32px !important;
+    background: #493BFF !important;
+    color: #ffffff !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Extra small mobile screens */
+@media (max-width: 380px) {
+  .ps-gif-wrap {
+    height: 190px !important;
+    margin: 8px auto 12px !important;
+  }
+
+  .ps-gif-wrap img {
+    width: 145px !important;
+    height: 145px !important;
+  }
+
+  .ps-sub {
+    font-size: 15px !important;
+    margin-bottom: 20px !important;
+  }
+}
+
+
+
+
+
+
+
+
+@media (max-width: 480px) {
+  .ps-gif-wrap {
+    height: 170px !important;
+    margin: 10px auto 15px !important;
+  }
+
+  .ps-gif-wrap img {
+    width: 120px !important;
+    height: 120px !important;
+    object-fit: contain !important;
+  }
+}
+
+
+
+
+
+
+
+
+@media (max-width: 480px) {
+  .ps-sheet {
+    padding: 14px 20px 20px !important;
+  }
+
+  .ps-gif-wrap {
+    height: 140px !important;
+    margin: 5px auto 10px !important;
+  }
+
+  .ps-gif-wrap img {
+    width: 110px !important;
+    height: 110px !important;
+  }
+
+  .ps-title {
+    margin: 5px 0 10px !important;
+  }
+
+  .ps-sub {
+    margin: 0 10px 18px !important;
+  }
+
+  .ps-action {
+    min-height: 52px !important;
+  }
 }
